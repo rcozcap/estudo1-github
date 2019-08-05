@@ -1,8 +1,16 @@
 package program;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
+import db.DbException;
+import db.DbJava;
+import entities.Notes;
 import entities.Student; 
 
 public class Application {
@@ -11,9 +19,11 @@ public class Application {
 
 		Scanner sc = new Scanner(System.in);
 		Locale.setDefault(Locale.US);
-		
+		Notes notes = new Notes();
+		System.out.println(notes.toString());
+		System.out.println();
 
-		Student[] vect = new Student[10];
+		List<Notes> list = new ArrayList<>();
 
 		System.out.println("How many students you want to add? ");
 		int RA = sc.nextInt();
@@ -29,19 +39,45 @@ public class Application {
 			System.out.println("Notas NP1: ");
 			double NP1 = sc.nextDouble();
 			System.out.println("Notas NP2: ");
-			double NP2 = sc.nextDouble();
-			double average = (NP1 + NP2) / 2; 
-			System.out.print("Média: " + average);
+			double NP2 = sc.nextDouble(); 
+			System.out.print("Média: " + (NP1 + NP2) / 2);
 			System.out.println();
-			vect[RA] = new Student(name, email);
+			notes = new Notes(name, email, NP1, NP2);
 		}
 		for (int i = 0; i <= RA; i++) {
-			if (vect[i] != null)
-			System.out.print(i + ": " + vect[i]);{
+			if (list != null)
+			System.out.print(i + ": " + list);
+			
+			Connection conn = null;
+			PreparedStatement st = null;
+			try {
+				conn = DbJava.getConnection();
+					
+				st = conn.prepareStatement(
+						"INSERT INTO ti2p22" + "(NAME, EMAIL, NP1, NP2, MEDIA)" + "VALUES" + "(?, ?, ?, ?, ?)");
+				st.setString(1, notes.getName());
+				st.setString(2, notes.getEmail());
+				st.setDouble(3, notes.getNP1());
+				st.setDouble(4, notes.getNP2());
+				st.setDouble(5, (notes.getNP1() + notes.getNP2()) / 2);
+				
+				int rowsAffected = st.executeUpdate();
+				
+				System.out.println("Done! Rows Afeected " + rowsAffected);	
+			}
+			catch (SQLException e) {
+				throw new DbException(e.getMessage());
+			}
+			finally {
+				DbJava.closeConnection();
+			}
+			
+			
+			{
 		}
 			}
 		sc.close();
-
+		
 	}
 
 }

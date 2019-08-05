@@ -1,18 +1,18 @@
 package entities;
 
-public class Notes {
+public class Notes extends Student {
 
 	private double NP1;
 	private double NP2;
-	private String professor_name;
-	private String discipline;
 
+	public Notes() {
+		super();
+	}
 
-	public Notes(double nP1, double nP2, String professor_name, String discipline) {
+	public Notes(String name, String email, double nP1, double nP2) {
+		super(name, email);
 		NP1 = nP1;
 		NP2 = nP2;
-		this.professor_name = professor_name;
-		this.discipline = discipline;
 	}
 
 	public double getNP1() {
@@ -31,20 +31,10 @@ public class Notes {
 		NP2 = nP2;
 	}
 
-	public String getProfessor_name() {
-		return professor_name;
-	}
-
-	public void setProfessor_name(String professor_name) {
-		this.professor_name = professor_name;
-	}
-
-	public String getDiscipline() {
-		return discipline;
-	}
-
-	public void setDiscipline(String discipline) {
-		this.discipline = discipline;
+	
+	@Override
+	public String toString() {
+		return super.toString();
 	}
 
 }

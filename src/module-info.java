@@ -6,4 +6,5 @@
  *
  */
 module faculdade {
+	requires java.sql;
 }
